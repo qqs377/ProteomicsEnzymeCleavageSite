@@ -1,3 +1,4 @@
+// All proteases use the same red color
 const PROTEASE_COLOR = '#dc3545';
 
 const enzymes = {
@@ -32,6 +33,7 @@ const PHOSPHO_COLOR = '#8b00ff';
 const enzymeGrid = document.getElementById('enzymeGrid');
 const ptmGrid = document.getElementById('ptmGrid');
 const sequenceInput = document.getElementById('sequence');
+const customPositionsInput = document.getElementById('customPositions');
 const resultDiv = document.getElementById('result');
 const statsDiv = document.getElementById('stats');
 const legendDiv = document.getElementById('legend');
@@ -84,6 +86,7 @@ document.querySelectorAll('.ptm-phos-checkbox').forEach(cb => {
 });
 
 sequenceInput.addEventListener('input', highlightSequence);
+customPositionsInput.addEventListener('input', highlightSequence);
 
 function highlightSequence() {
     const sequence = sequenceInput.value.toUpperCase().replace(/\s/g, '');
@@ -93,8 +96,20 @@ function highlightSequence() {
         .map(cb => cb.value);
     const selectedPhospho = Array.from(document.querySelectorAll('.ptm-phos-checkbox:checked'))
         .map(cb => cb.value);
+    
+    // Parse custom positions
+    const customPositionsText = customPositionsInput.value.trim();
+    const customPositions = new Set();
+    if (customPositionsText) {
+        customPositionsText.split(',').forEach(pos => {
+            const parsed = parseInt(pos.trim());
+            if (!isNaN(parsed) && parsed > 0) {
+                customPositions.add(parsed - 1); // Convert to 0-based index
+            }
+        });
+    }
 
-    if (!sequence || (selectedEnzymes.length === 0 && selectedPTMs.length === 0 && selectedPhospho.length === 0)) {
+    if (!sequence || (selectedEnzymes.length === 0 && selectedPTMs.length === 0 && selectedPhospho.length === 0 && customPositions.size === 0)) {
         resultDiv.innerHTML = '<div class="empty-state">Enter a sequence and select enzymes/PTMs to see cleavage sites</div>';
         statsDiv.innerHTML = '';
         legendDiv.innerHTML = '';
@@ -180,19 +195,38 @@ function highlightSequence() {
             html += ' ';
         }
         
-        if (positionColors[i]) {
-            // Prioritize PTMs over enzymes if both present
-            const ptmMods = positionColors[i].filter(m => m.type === 'ptm' || m.type === 'phospho');
-            const enzymeMods = positionColors[i].filter(m => m.type === 'enzyme');
+        const isCustomPosition = customPositions.has(i);
+        const hasColor = positionColors[i];
+        
+        if (hasColor || isCustomPosition) {
+            let style = '';
+            let cssClass = 'highlight';
+            let title = '';
             
-            if (ptmMods.length > 0) {
-                const color = ptmMods[0].color;
-                const title = [...new Set(positionColors[i].map(m => m.name))].join(', ');
-                html += `<span class="highlight" style="background-color: ${color}; color: white;" title="${title}">${char}</span>`;
-            } else {
-                const title = [...new Set(enzymeMods.map(m => m.name))].join(', ');
-                html += `<span class="highlight" style="background-color: ${PROTEASE_COLOR}; color: white;" title="${title}">${char}</span>`;
+            if (hasColor) {
+                // Prioritize PTMs over enzymes if both present
+                const ptmMods = positionColors[i].filter(m => m.type === 'ptm' || m.type === 'phospho');
+                const enzymeMods = positionColors[i].filter(m => m.type === 'enzyme');
+                
+                if (ptmMods.length > 0) {
+                    style = `background-color: ${ptmMods[0].color}; color: white;`;
+                } else {
+                    style = `background-color: ${PROTEASE_COLOR}; color: white;`;
+                }
+                
+                title = [...new Set(positionColors[i].map(m => m.name))].join(', ');
             }
+            
+            if (isCustomPosition) {
+                cssClass += ' boxed';
+                if (title) {
+                    title += `, Position ${i + 1}`;
+                } else {
+                    title = `Position ${i + 1}`;
+                }
+            }
+            
+            html += `<span class="${cssClass}" style="${style}" title="${title}">${char}</span>`;
         } else {
             html += char;
         }
@@ -221,6 +255,12 @@ function highlightSequence() {
         selectedPTMs.forEach(name => {
             statsHtml += `<div class="stats-item" style="margin-left: 15px;">${name}: ${ptmCounts[name]} site(s)</div>`;
         });
+    }
+    
+    if (customPositions.size > 0) {
+        const sortedPositions = Array.from(customPositions).sort((a, b) => a - b).map(p => p + 1);
+        statsHtml += '<div class="stats-item" style="margin-top: 10px;"><strong>Custom Positions:</strong></div>';
+        statsHtml += `<div class="stats-item" style="margin-left: 15px;">${customPositions.size} position(s): ${sortedPositions.join(', ')}</div>`;
     }
     
     statsHtml += '</div>';
@@ -258,6 +298,15 @@ function highlightSequence() {
             </div>
         `;
     });
+    
+    if (customPositions.size > 0) {
+        legendHtml += `
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: white; border: 2px solid black;"></div>
+                <span><strong>Custom Positions</strong> (black box)</span>
+            </div>
+        `;
+    }
     
     legendHtml += '</div></div>';
     legendDiv.innerHTML = legendHtml;
