@@ -303,7 +303,7 @@ function highlightSequence() {
         legendHtml += `
             <div class="legend-item">
                 <div class="legend-color" style="background-color: white; border: 2px solid black;"></div>
-                <span><strong>Custom Positions</strong> (black box)</span>
+                <span><strong>Custom Positions</strong> (yellow box)</span>
             </div>
         `;
     }
