@@ -173,15 +173,17 @@ textarea:focus {
 }
 
 .boxed {
-    border: 2px solid #ffd900;
+    border: 3px solid #FFD700;
     padding: 2px 4px;
     border-radius: 3px;
     font-weight: bold;
     display: inline-block;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
 }
 
 .highlight.boxed {
-    border: 2px solid #ffd900;
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
 }
 
 .stats {
