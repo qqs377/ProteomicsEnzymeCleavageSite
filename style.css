@@ -173,7 +173,7 @@ textarea:focus {
 }
 
 .boxed {
-    border: 2px solid #000000;
+    border: 2px solid #ffd900;
     padding: 2px 4px;
     border-radius: 3px;
     font-weight: bold;
@@ -181,7 +181,7 @@ textarea:focus {
 }
 
 .highlight.boxed {
-    border: 2px solid #000000;
+    border: 2px solid #ffd900;
 }
 
 .stats {
