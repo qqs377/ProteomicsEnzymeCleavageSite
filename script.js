@@ -302,8 +302,8 @@ function highlightSequence() {
     if (customPositions.size > 0) {
         legendHtml += `
             <div class="legend-item">
-                <div class="legend-color" style="background-color: white; border: 2px solid black;"></div>
-                <span><strong>Custom Positions</strong> (yellow box)</span>
+                <div class="legend-color" style="background-color: white; border: 3px solid #FFD700; box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);"></div>
+                <span><strong>Custom Positions</strong> (gold border with glow)</span>
             </div>
         `;
     }
