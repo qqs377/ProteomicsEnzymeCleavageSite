@@ -9,13 +9,13 @@
 <body>
     <div class="container">
         <h1>🧬 Protein Cleavage Site Highlighter</h1>
-        <p class="subtitle">Identify and visualize protease cleavage sites in protein sequences</p>
+        <p class="subtitle">Identify and visualize protease cleavage sites and PTMs in protein sequences</p>
 
         <div>
             <label for="sequence">Protein Sequence:</label>
             <textarea 
                 id="sequence" 
-                placeholder="Enter protein sequence (e.g., MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL">Enter protein sequence...</textarea>
+                placeholder="Enter protein sequence (e.g., MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL)">Enter protein sequence...</textarea>
         </div>
 
         <div class="enzyme-section">
@@ -25,19 +25,38 @@
 
         <div class="enzyme-section">
             <label>Post-Translational Modifications (PTMs):</label>
+            
+            <div class="ptm-category">
+                <div class="ptm-category-header">Phosphorylation</div>
+                <div class="ptm-inline-options">
+                    <div class="enzyme-option">
+                        <input type="checkbox" id="ptm_phos_S" value="S" class="ptm-phos-checkbox">
+                        <label for="ptm_phos_S">S</label>
+                    </div>
+                    <div class="enzyme-option">
+                        <input type="checkbox" id="ptm_phos_T" value="T" class="ptm-phos-checkbox">
+                        <label for="ptm_phos_T">T</label>
+                    </div>
+                    <div class="enzyme-option">
+                        <input type="checkbox" id="ptm_phos_Y" value="Y" class="ptm-phos-checkbox">
+                        <label for="ptm_phos_Y">Y</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="enzyme-grid" id="ptmGrid"></div>
         </div>
 
         <div class="result-section">
             <label>Highlighted Sequence:</label>
             <div id="result" class="sequence-display">
-                <div class="empty-state">Enter a sequence and select enzymes to see cleavage sites</div>
+                <div class="empty-state">Enter a sequence and select enzymes/PTMs to see cleavage sites</div>
             </div>
             <div id="stats"></div>
             <div id="legend"></div>
         </div>
     </div>
 
-     <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
